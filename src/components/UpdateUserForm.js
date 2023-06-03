@@ -1,10 +1,25 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-const CreateUserForm = () => {
+const UpdateUserForm = () => {
+  const [userID, setUserID] = useState('');
   const [emailAddress, setEmailAddress] = useState('');
   const [userPassword, setUserPassword] = useState('');
   const [userName, setUserName] = useState('');
+
+  useEffect(() => {
+    // Get the user data from the server
+    axios.get(`http://localhost:5000/user/${userID}`)
+      .then((response) => {
+        const user = response.data;
+        setEmailAddress(user.emailAddress);
+        setUserPassword(user.userPassword);
+        setUserName(user.userName);
+      })
+      .catch((error) => {
+        console.error('Error getting user data:', error);
+      });
+  }, [userID]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -16,17 +31,28 @@ const CreateUserForm = () => {
     };
 
     try {
-      const result = await axios.post('http://localhost:5000/register', userData);
-      console.log('New user created:', result.results);
+      await axios.put(`http://localhost:5000/users/${userID}`, userData);
+      console.log('User updated successfully');
+      console.log(userData);
     } catch (error) {
-      console.error('Error creating user:', error);
+      console.error('Error updating user:', error);
     }
   };
 
   return (
     <div>
-      <h1>Create New User</h1>
+      <h1>Update User</h1>
       <form onSubmit={handleSubmit}>
+        <div>
+          <label htmlFor="userID">User ID:</label>
+          <input
+            type="text"
+            id="userID"
+            value={userID}
+            onChange={(e) => setUserID(e.target.value)}
+            required
+          />
+        </div>
         <div>
           <label htmlFor="emailAddress">Email Address:</label>
           <input
@@ -57,10 +83,10 @@ const CreateUserForm = () => {
             required
           />
         </div>
-        <button type="submit">Create User</button>
+        <button type="submit" onClick={handleSubmit}>Update User</button>
       </form>
     </div>
   );
 };
 
-export default CreateUserForm;
+export default UpdateUserForm;

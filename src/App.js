@@ -1,13 +1,16 @@
 import React, { useEffect, useState } from "react";
 import "./App.css";
 import axios from "axios";
-import CreateUserForm from './CreateUserForm';
+import CreateUserForm from './components/CreateUserForm';
+import UpdateUserForm from './components/UpdateUserForm';
 
 function App() {
   const [users, setUsers] = useState([]);
+  const [houses, setHouses] = useState([]);
 
   useEffect(() => {
     loadUserData();
+    fetchHousesData();
   }, []);
 
   const loadUserData = async () => {
@@ -17,6 +20,26 @@ function App() {
       setUsers(result.data.results);
     } catch (error) {
       console.error('Error loading user data:', error);
+    }
+  };
+
+  const fetchHousesData = async () => {
+    try {
+      const result = await axios.get('http://localhost:5000/houses');
+      console.log(result.data.results);
+      setHouses(result.data.results);
+    } catch (error) {
+      console.error('Error loading house data:', error);
+    }
+  };
+
+  const deleteUser = async (userID) => {
+    try {
+      await axios.delete(`http://localhost:5000/user/${userID}`);
+      console.log(`User ${userID} deleted successfully`);
+      setUsers(users.filter(user => user.userID !== userID));
+    } catch (error) {
+      console.error('Error deleting user:', error);
     }
   };
 
@@ -31,25 +54,53 @@ function App() {
     );
   }
 
-  const userRows = []; // Array to hold the JSX rows
+  const userRows = users.map((user, index) => (
+    <tr key={user.userID}>
+      <th scope="row">{index + 1}</th>
+      <td>{user.userName}</td>
+      <td>{user.emailAddress}</td>
+      <td>{user.userPassword}</td>
+      <td>
+        <button onClick={() => deleteUser(user.userID)}>Delete</button>
+      </td>
+    </tr>
+  ));
 
-  for (let i = 0; i < users.length; i++) {
-    const user = users[i];
-    userRows.push(
-      <tr key={i}>
-        <th scope="row">{i + 1}</th>
-        <td>{user.userName}</td>
-        <td>{user.emailAddress}</td>
-        <td>{user.userPassword}</td>
-      </tr>
-    );
-  }
+  const houseCards = houses.map((house) => (
+    <div className="container">
+    <div className="row">
+      <div className="col">
+    <div key={house.houseID} className="card my-3 mx-auto" style={{ width: '18rem' }}>
+      <img src={house.imgURL} className="card-img-top" alt="House" />
+      <div className="card-body">
+        <p className="card-text">{house.houseDescription}</p>
+        <p className="card-text">Location: {house.location}</p>
+        <p className="card-text">R {house.price}</p>
+        {/* <a href="#" className="btn btn-primary">Go somewhere</a> */}
+      </div>
+    </div>
+
+      </div>
+    </div>
+
+    </div>
+  ));
 
   return (
     <div className="App">
-      <header className="App-header"></header>
       <main>
-      <CreateUserForm />
+        <h1 className="display-1">Users</h1>
+        <div className="container">
+          <div className="row">
+            <div className="col">
+              <CreateUserForm />
+            </div>
+            <div className="col">
+              <UpdateUserForm />
+            </div>
+          </div>
+        </div>
+        <h1>Rendering Users</h1>
         <table className="table table-bordered border-primary">
           <thead>
             <tr>
@@ -57,10 +108,16 @@ function App() {
               <th scope="col">First</th>
               <th scope="col">Last</th>
               <th scope="col">Handle</th>
-            </tr>
+              <th scope="col">Delete</th>
+              </tr>
           </thead>
           <tbody>{userRows}</tbody>
         </table>
+
+        <div className="container">
+          <h1 className="display-1">Houses</h1>
+          {houseCards}
+        </div>
       </main>
     </div>
   );
