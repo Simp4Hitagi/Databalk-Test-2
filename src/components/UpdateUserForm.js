@@ -3,35 +3,38 @@ import axios from 'axios';
 
 const UpdateUserForm = () => {
   const [userID, setUserID] = useState('');
-  const [emailAddress, setEmailAddress] = useState('');
-  const [userPassword, setUserPassword] = useState('');
-  const [userName, setUserName] = useState('');
+  const [userData, setUserData] = useState({
+    emailAddress: '',
+    userPassword: '',
+    userName: '',
+  });
 
   useEffect(() => {
-    // Get the user data from the server
-    axios.get(`http://localhost:5000/user/${userID}`)
+    axios
+      .get(`http://localhost:5000/user/${userID}`)
       .then((response) => {
         const user = response.data;
-        setEmailAddress(user.emailAddress);
-        setUserPassword(user.userPassword);
-        setUserName(user.userName);
+        setUserData(user);
       })
       .catch((error) => {
         console.error('Error getting user data:', error);
       });
   }, [userID]);
 
+  const handleInput = (event) => {
+    setUserData({ ...userData, [event.target.name]: event.target.value });
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    const userData = {
-      emailAddress,
-      userPassword,
-      userName
-    };
-
     try {
-      await axios.put(`http://localhost:5000/users/${userID}`, userData);
+      const { emailAddress, userPassword, userName } = userData;
+      await axios.put(`http://localhost:5000/user/${userID}`, {
+        emailAddress,
+        userPassword,
+        userName,
+      });
       console.log('User updated successfully');
       console.log(userData);
     } catch (error) {
@@ -46,44 +49,48 @@ const UpdateUserForm = () => {
         <div>
           <label htmlFor="userID">User ID:</label>
           <input
+            name="userID"
             type="text"
             id="userID"
             value={userID}
-            onChange={(e) => setUserID(e.target.value)}
-            required
+            onChange={(event) => setUserID(event.target.value)}
+            
           />
         </div>
         <div>
           <label htmlFor="emailAddress">Email Address:</label>
           <input
+            name="emailAddress"
             type="email"
             id="emailAddress"
-            value={emailAddress}
-            onChange={(e) => setEmailAddress(e.target.value)}
-            required
+            value={userData.emailAddress}
+            onChange={handleInput}
+            
           />
         </div>
         <div>
           <label htmlFor="userPassword">User Password:</label>
           <input
+            name="userPassword"
             type="password"
             id="userPassword"
-            value={userPassword}
-            onChange={(e) => setUserPassword(e.target.value)}
-            required
+            value={userData.userPassword}
+            onChange={handleInput}
+            
           />
         </div>
         <div>
           <label htmlFor="userName">User Name:</label>
           <input
+            name="userName"
             type="text"
             id="userName"
-            value={userName}
-            onChange={(e) => setUserName(e.target.value)}
-            required
+            value={userData.userName}
+            onChange={handleInput}
+            
           />
         </div>
-        <button type="submit" onClick={handleSubmit}>Update User</button>
+        <button type="submit">Update User</button>
       </form>
     </div>
   );
