@@ -2,18 +2,11 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import CreateUserForm from "./components/CreateUserForm";
 import UpdateUserForm from "./components/UpdateUserForm";
-<<<<<<< HEAD
 import CreateHouse from "./components/CreateHouse";
 import UpdateHouse from "./components/UpdateHouse";
 
 function App() {
   const [selectedUserID, setSelectedUserID] = useState("");
-=======
-import CreateHouse from "./components/CreateHouse"
-import UpdateHouse from "./components/UpdateHouse";
-
-function App() {
->>>>>>> origin/main
   const [users, setUsers] = useState([]);
   const [houses, setHouses] = useState([]);
 
@@ -46,7 +39,6 @@ function App() {
     }
   };
 
-<<<<<<< HEAD
   const handleUserSelection = (event) => {
     setSelectedUserID(event.target.value);
   };
@@ -63,17 +55,6 @@ function App() {
       }
     } catch (error) {
       console.error("Error deleting user:", error);
-=======
-  const deleteUser = async (userID) => {
-    try {
-      const response = await axios.delete(`http://localhost:5000/user/${userID}`);
-      if (response.status === 200) {
-        console.log(`User ${userID} deleted successfully`);
-        setUsers(users.filter(user => user.userID !== userID));
-      }
-    } catch (error) {
-      console.error('Error deleting user:', error);
->>>>>>> origin/main
     }
   };
 
@@ -88,42 +69,26 @@ function App() {
     );
   }
 
-<<<<<<< HEAD
   const userOptions = users.map((user) => (
     <option key={user.userID} value={user.userID}>
       {user.userName}
     </option>
   ));
 
-=======
->>>>>>> origin/main
   const userRows = users.map((user, index) => (
     <tr key={user.userID}>
       <th scope="row">{index + 1}</th>
       <td>{user.userName}</td>
       <td>{user.emailAddress}</td>
       <td>{user.userPassword}</td>
-<<<<<<< HEAD
-=======
-      <td>
-        <button onClick={() => deleteUser(user.userID)}>Delete</button>
-      </td>
->>>>>>> origin/main
     </tr>
   ));
 
   const houseCards = houses.map((house) => (
-<<<<<<< HEAD
     <div className="container" key={house.houseID}>
       <div className="row">
         <div className="col">
           <div className="card my-3 mx-auto" style={{ width: "18rem" }}>
-=======
-    <div className="container">
-      <div className="row">
-        <div className="col">
-          <div key={house.houseID} className="card my-3 mx-auto" style={{ width: "18rem" }}>
->>>>>>> origin/main
             <img src={house.imgURL} className="card-img-top" alt="House" />
             <div className="card-body">
               <p className="card-text">{house.houseDescription}</p>
@@ -152,25 +117,16 @@ function App() {
         </div>
         <h1>Rendering Users</h1>
         <table className="table table-bordered border-primary">
-<<<<<<< HEAD
           <thead>
-=======
-        <thead>
->>>>>>> origin/main
             <tr>
               <th scope="col">#</th>
               <th scope="col">First</th>
               <th scope="col">Last</th>
               <th scope="col">Handle</th>
-<<<<<<< HEAD
-=======
-              <th scope="col">Delete</th>
->>>>>>> origin/main
             </tr>
           </thead>
           <tbody>{userRows}</tbody>
         </table>
-<<<<<<< HEAD
         <div>
           <label htmlFor="userSelect">Select User:</label>
           <select
@@ -196,22 +152,6 @@ function App() {
               </div>
             </div>
           </div>
-=======
-
-        <div className="container">
-          <h1 className="display-1">Houses</h1> 
-          <div className="container">
-          <div className="row">
-            <div className="col">
-              <CreateHouse />
-            </div>
-            <div className="col">
-              <UpdateHouse />
-            </div>
-          </div>
-        </div>
-
->>>>>>> origin/main
           {houseCards}
         </div>
       </main>
