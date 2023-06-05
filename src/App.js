@@ -31,7 +31,7 @@ function App() {
   // fetching user data function
   const loadUserData = async () => {
     try {
-      const response = await axios.get("http://localhost:5000/users");
+      const response = await axios.get("https://databalk-test-1.onrender.com/users");
       if (response.status === 200) {
         console.log(response.data.results);
         setUsers(
@@ -50,7 +50,7 @@ function App() {
   // delete function for single user
   const deleteUser = async (userID) => {
     try {
-      const response = await axios.delete(`http://localhost:5000/user/${userID}`);
+      const response = await axios.delete(`https://databalk-test-1.onrender.com/user/${userID}`);
       if (response.status === 200) {
         console.log(`User ${userID} deleted successfully`);
         setUsers(users.filter(user => user.userID !== userID));
@@ -65,7 +65,7 @@ function App() {
   // fetching house data function
   const fetchHousesData = async () => {
     try {
-      const response = await axios.get("http://localhost:5000/houses");
+      const response = await axios.get("https://databalk-test-1.onrender.com/houses");
       if (response.status === 200) {
         console.log(response.data.results);
         setHouses(
@@ -128,7 +128,7 @@ function App() {
       <td>{user.userPassword}</td>
       <td>
       {/* triggers the deleteUser function when userID is passed */}
-        <button className="btn border-danger" onClick={() => deleteUser(user.userID)}>Delete</button>
+        <button className="btn border-danger border-3" onClick={() => deleteUser(user.userID)}>Delete</button>
       </td>
     </tr>
   ));
@@ -157,34 +157,35 @@ function App() {
 
   return (
     <div className="App">
-      <main>
-        <h1 className="display-1">Users</h1>
+      <main className="bg-dark text-light">
+        <h1 className="display-1 text-center">Users</h1>
         <div className="container">
           <div className="row">
             <div className="col">
             <CreateUserForm />
             </div>
             <div className="col">
+            <h1>Update User</h1>
               <UpdateUserForm />
             </div>
           </div>
         </div>
-        <h1>Rendering Users</h1>
-        <table className="table table-hover table-bordered border-primary">
+        <h1 className="mx-3">Rendering Users</h1>
+        <table className="table table-hover table-bordered border-primary mx-3">
           <thead>
             <tr>
-              <th scope="col">ID</th>
-              <th scope="col">User Name</th>
-              <th scope="col">Email</th>
-              <th scope="col">Hashed password</th>
-              <th scope="col">Delete</th>
+              <th className="bg-primary opacity-75" scope="col">ID</th>
+              <th className="bg-primary opacity-75" scope="col">User Name</th>
+              <th className="bg-primary opacity-75" scope="col">Email</th>
+              <th className="bg-primary opacity-75" scope="col">Hashed password</th>
+              <th className="bg-primary opacity-75" scope="col">Delete</th>
             </tr>
           </thead>
           {/* calling userRows*/}
-          <tbody>{userRows}</tbody>
+          <tbody className="bg-primary opacity-50">{userRows}</tbody>
         </table>
         <div className="container">
-          <h1 className="display-1">Houses</h1>
+          <h1 className="display-1 text-center">Houses</h1>
           <div className="container">
             <div className="row">
               <div className="col">

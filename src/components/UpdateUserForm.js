@@ -11,7 +11,7 @@ const UpdateUserForm = () => {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:5000/user/${userID}`)
+      .get(`https://databalk-test-1.onrender.com/user/${userID}`)
       .then((response) => {
         const user = response.data;
         setUserData(user);
@@ -30,7 +30,7 @@ const UpdateUserForm = () => {
 
     try {
       const { emailAddress, userPassword, userName } = userData;
-      await axios.put(`http://localhost:5000/user/${userID}`, {
+      await axios.put(`https://databalk-test-1.onrender.com/user/${userID}`, {
         emailAddress,
         userPassword,
         userName,
@@ -44,53 +44,52 @@ const UpdateUserForm = () => {
 
   return (
     <div>
-      <h1>Update User</h1>
       <form onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="userID">User ID:</label>
+        <div className="mb-3">
+          <label htmlFor="userID" className="form-label">User ID:</label>
           <input
+            className="form-control rounded-3"
             name="userID"
             type="text"
             id="userID"
             value={userID}
             onChange={(event) => setUserID(event.target.value)}
-            
           />
         </div>
-        <div>
-          <label htmlFor="emailAddress">Email Address:</label>
+        <div className="mb-3">
+          <label htmlFor="emailAddress" className="form-label">Email Address:</label>
           <input
+            className="form-control rounded-3"
             name="emailAddress"
             type="email"
             id="emailAddress"
             value={userData.emailAddress}
             onChange={handleInput}
-            
           />
         </div>
-        <div>
-          <label htmlFor="userPassword">User Password:</label>
+        <div className="mb-3">
+          <label htmlFor="userPassword" className="form-label">User Password:</label>
           <input
+            className="form-control rounded-3"
             name="userPassword"
             type="password"
             id="userPassword"
             value={userData.userPassword}
             onChange={handleInput}
-            
           />
         </div>
-        <div>
-          <label htmlFor="userName">User Name:</label>
+        <div className="mb-3">
+          <label htmlFor="userName" className="form-label">User Name:</label>
           <input
+            className="form-control rounded-3"
             name="userName"
             type="text"
             id="userName"
             value={userData.userName}
             onChange={handleInput}
-            
           />
         </div>
-        <button type="submit">Update User</button>
+        <button className="btn border-success border-3 text-light" type="submit">Update User</button>
       </form>
     </div>
   );

@@ -1,9 +1,15 @@
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 .App {
   text-align: center;
 }
 
 body {
-  /* background-color: #000000; */
+  /* overflow-x: hidden; */
+  background-color: #000000 !important;
   align-items: center;
   justify-content: center;
   margin-top: 3rem
