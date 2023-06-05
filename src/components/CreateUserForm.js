@@ -18,6 +18,7 @@ const CreateUserForm = () => {
     try {
       const result = await axios.post('https://databalk-test-1.onrender.com/register', userData);
       console.log('New user created:', result.results);
+      window.location.href = window.location.href;
     } catch (error) {
       console.error('Error creating user:', error);
     }

@@ -37,6 +37,7 @@ const UpdateUserForm = () => {
       });
       console.log('User updated successfully');
       console.log(userData);
+      window.location.href = window.location.href;
     } catch (error) {
       console.error('Error updating user:', error);
     }

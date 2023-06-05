@@ -20,6 +20,7 @@ const CreateHouse = () => {
     try {
       const result = await axios.post('https://databalk-test-1.onrender.com/house', houseData);
       console.log('New house created:', result.results);
+      window.location.href = window.location.href;
     } catch (error) {
       console.error('Error creating house:', error);
     }

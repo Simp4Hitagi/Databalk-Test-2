@@ -85,7 +85,7 @@ function App() {
   // delete function for single house
   const deleteHouse = async (houseID) => {
     try {
-      const response = await axios.delete(`http://localhost:5000/house/${houseID}`);
+      const response = await axios.delete(`https://databalk-test-1.onrender.com/house/${houseID}`);
       if (response.status === 200) {
         console.log(`House ${houseID} deleted successfully`);
         setHouses(houses.filter(house => house.houseID !== houseID));
@@ -157,9 +157,9 @@ function App() {
 
   return (
     <div className="App">
-      <main className="bg-dark text-light">
+      <main className="bg-dark text-light w-100">
         <h1 className="display-1 text-center">Users</h1>
-        <div className="container">
+        <div className="container-fluid">
           <div className="row">
             <div className="col">
             <CreateUserForm />
@@ -171,7 +171,7 @@ function App() {
           </div>
         </div>
         <h1 className="mx-3">Rendering Users</h1>
-        <table className="table table-hover table-bordered border-primary mx-3">
+        <table className="table table-hover table-bordered border-primary mx-3 table-responsive">
           <thead>
             <tr>
               <th className="bg-primary opacity-75" scope="col">ID</th>

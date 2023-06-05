@@ -39,6 +39,7 @@ const UpdateHouse = () => {
       });
       console.log('House updated successfully');
       console.log(houseData);
+      window.location.href = window.location.href;
     } catch (error) {
       console.error('Error updating house:', error);
     }
