@@ -1,66 +1,109 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+// importing create and update components
 import CreateUserForm from "./components/CreateUserForm";
 import UpdateUserForm from "./components/UpdateUserForm";
 import CreateHouse from "./components/CreateHouse";
 import UpdateHouse from "./components/UpdateHouse";
 
 function App() {
-  const [selectedUserID, setSelectedUserID] = useState("");
+  /*
+    initialising user 
+    and house state with empty array's, respectively
+  */
   const [users, setUsers] = useState([]);
   const [houses, setHouses] = useState([]);
 
   useEffect(() => {
+  /*
+    using useEffect hook to call fetch functions for
+    user data 
+    and house data 
+    from localhost API
+  */
+
     loadUserData();
     fetchHousesData();
+
   }, []);
 
+  //  ===========User===========
+  // fetching user data function
   const loadUserData = async () => {
     try {
       const response = await axios.get("http://localhost:5000/users");
       if (response.status === 200) {
         console.log(response.data.results);
-        setUsers(response.data.results);
+        setUsers(
+          response.data.results.map((user) => ({
+            userID: user.userID,
+            userName: user.userName,
+            emailAddress: user.emailAddress,
+            userPassword: user.userPassword,
+          }))
+        );
       }
     } catch (error) {
       console.error("Error loading user data:", error);
     }
   };
+  // delete function for single user
+  const deleteUser = async (userID) => {
+    try {
+      const response = await axios.delete(`http://localhost:5000/user/${userID}`);
+      if (response.status === 200) {
+        console.log(`User ${userID} deleted successfully`);
+        setUsers(users.filter(user => user.userID !== userID));
+      }
+    } catch (error) {
+      console.error('Error deleting user:', error);
+    }
+  };
 
+
+  //  ===========House===========
+  // fetching house data function
   const fetchHousesData = async () => {
     try {
       const response = await axios.get("http://localhost:5000/houses");
       if (response.status === 200) {
         console.log(response.data.results);
-        setHouses(response.data.results);
+        setHouses(
+          response.data.results.map((house) => ({
+            houseID: house.houseID,
+            houseDescription: house.houseDescription,
+            location: house.location,
+            price: house.price,
+            imgURL: house.imgURL,
+          }))
+        );
       }
     } catch (error) {
       console.error("Error loading house data:", error);
     }
   };
-
-  const handleUserSelection = (event) => {
-    setSelectedUserID(event.target.value);
-  };
-
-  const deleteUser = async () => {
+  // delete function for single house
+  const deleteHouse = async (houseID) => {
     try {
-      const response = await axios.delete(
-        `http://localhost:5000/user/${selectedUserID}`
-      );
+      const response = await axios.delete(`http://localhost:5000/house/${houseID}`);
       if (response.status === 200) {
-        console.log(`User ${selectedUserID} deleted successfully`);
-        setUsers(users.filter((user) => user.userID !== selectedUserID));
-        setSelectedUserID("");
+        console.log(`House ${houseID} deleted successfully`);
+        setHouses(houses.filter(house => house.houseID !== houseID));
       }
     } catch (error) {
-      console.error("Error deleting user:", error);
+      console.error('Error deleting house:', error);
     }
   };
 
-  if (!users) {
-    return (
-      <div>
+
+  if (!users || !houses) {
+    /* 
+        loader incase data from API doesn't come through for
+        users and
+        houses
+    */
+   return (
+     <div>
         <div className="spinner-border text-light" role="status">
           <span className="visually-hidden">Loading...</span>
         </div>
@@ -69,21 +112,30 @@ function App() {
     );
   }
 
-  const userOptions = users.map((user) => (
-    <option key={user.userID} value={user.userID}>
-      {user.userName}
-    </option>
-  ));
 
+  /*
+   renders the rows of the users table with the user data
+   AND
+   iterates over the array of users and generates a row for each user in the table. 
+   The index is used to display the row UserID/number, 
+   and the user properties are displayed in their respective columns
+  */
   const userRows = users.map((user, index) => (
     <tr key={user.userID}>
       <th scope="row">{index + 1}</th>
       <td>{user.userName}</td>
       <td>{user.emailAddress}</td>
       <td>{user.userPassword}</td>
+      <td>
+      {/* triggers the deleteUser function when userID is passed */}
+        <button className="btn border-danger" onClick={() => deleteUser(user.userID)}>Delete</button>
+      </td>
     </tr>
   ));
 
+
+
+  // renders the cards for each house in the houses array
   const houseCards = houses.map((house) => (
     <div className="container" key={house.houseID}>
       <div className="row">
@@ -94,6 +146,8 @@ function App() {
               <p className="card-text">{house.houseDescription}</p>
               <p className="card-text">Location: {house.location}</p>
               <p className="card-text">R {house.price}</p>
+              <button className=" btn border-primary" onClick={() => deleteHouse(house.houseID)}>Delete</button>
+
             </div>
           </div>
         </div>
@@ -108,7 +162,7 @@ function App() {
         <div className="container">
           <div className="row">
             <div className="col">
-              <CreateUserForm />
+            <CreateUserForm />
             </div>
             <div className="col">
               <UpdateUserForm />
@@ -116,30 +170,19 @@ function App() {
           </div>
         </div>
         <h1>Rendering Users</h1>
-        <table className="table table-bordered border-primary">
+        <table className="table table-hover table-bordered border-primary">
           <thead>
             <tr>
-              <th scope="col">#</th>
-              <th scope="col">First</th>
-              <th scope="col">Last</th>
-              <th scope="col">Handle</th>
+              <th scope="col">ID</th>
+              <th scope="col">User Name</th>
+              <th scope="col">Email</th>
+              <th scope="col">Hashed password</th>
+              <th scope="col">Delete</th>
             </tr>
           </thead>
+          {/* calling userRows*/}
           <tbody>{userRows}</tbody>
         </table>
-        <div>
-          <label htmlFor="userSelect">Select User:</label>
-          <select
-            id="userSelect"
-            className="form-select"
-            value={selectedUserID}
-            onChange={handleUserSelection}
-          >
-            <option value="">Select</option>
-            {userOptions}
-          </select>
-          <button onClick={deleteUser}>Delete</button>
-        </div>
         <div className="container">
           <h1 className="display-1">Houses</h1>
           <div className="container">
@@ -152,6 +195,7 @@ function App() {
               </div>
             </div>
           </div>
+          {/* calling houseCards */}
           {houseCards}
         </div>
       </main>
